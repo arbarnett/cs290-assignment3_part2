@@ -1,12 +1,6 @@
 function getGists(form) {
-  console.log('inside getGists'); //lets me know I am inside it
-  console.log(form);  //lets me know what form
-
-
   var pageCount = form.pagecount.value;
   pageCount = parseInt(pageCount); //change from a string to an integer
-
-  console.log("page count: %d", pageCount); //check to make sure page count is working
 
 
   //new array to hold the language values
@@ -19,8 +13,6 @@ function getGists(form) {
       languagesArray.push(form.languages[i].value);
     }
   }
-
-  console.log("languages: %o", languagesArray);
 
   //STEP 1: Make an HTTP request
   var httpRequest;
@@ -43,7 +35,6 @@ function getGists(form) {
         //everything is good!
         responseString = httpRequest.responseText;
 
-        //console.log(responseString); //for testing
 
         //STEP 5
         var response = JSON.parse(responseString);
@@ -52,6 +43,7 @@ function getGists(form) {
         response = filterResponse(response, languagesArray);
 
         printResponse(response);
+        printFavorites();
 
       } else {
         //there was a problem
@@ -66,23 +58,34 @@ function getGists(form) {
   //actually make the request via GET method, and building the URL I am requesting
   httpRequest.open('GET', "https://api.github.com/gists"+"?page="+pageCount, true);
   httpRequest.send(null);
-
-
-
 }
 
 function filterResponse (response, languagesArray) {
-  var i, j, k;
+  var i, j, k, f;
   var filteredResponse = new Array();
   var havePushedResponse = false;
+  var isInFavorites = false;
+  var favorites = getFavorites();
 
-  if (languagesArray.length === 0) {
-    filteredResponse = response;
-  }
-  else {
-    //march through the response
-    for (i = 0; i < response.length; ++i) {
-      havePushedResponse = false;
+  //march through the response
+  for (i = 0; i < response.length; ++i) {
+    havePushedResponse = false;
+    isInFavorites = false;
+
+    for (f = 0; f < favorites.length; ++f) {
+      if (favorites[f] === (response[i].html_url + "~~" + response[i].description)) {
+        isInFavorites = true;
+        break;
+      }
+    }
+
+    if (isInFavorites) {
+      continue;
+    }
+
+    if (languagesArray.length === 0) {
+      filteredResponse.push(response[i]);
+    } else {
       //for each response, march the keys in the files object
       for (k in response[i].files) {
         //for each key in the file object, march through the languages array
@@ -99,7 +102,7 @@ function filterResponse (response, languagesArray) {
       }
     }
   }
-  console.log (filteredResponse);
+  
   return filteredResponse;
 }
 
@@ -110,17 +113,75 @@ function printResponse (response) {
   list.innerHTML = " ";
 
   for(i = 0; i< response.length; ++i) {
+    var buttonValue = (response[i].html_url + "~~" + response[i].description);
+    var favoritesButton = '<button onclick="addToFavorites(this);" value="'+ buttonValue + '">Add to favorites</button>';
     var gistLabel = "<br>Gist " + (i+1) +": <br>";
-    var gistUrl = "URL: " + response[i].url + "<br>";
+    var gistUrl = "URL: " +"<a target=\"_blank\" href=\""+ response[i].html_url +"\">"+ response[i].html_url + "</a>"+"<br>";
     var gistDescription = "Description: " + response[i].description + "<br>";
   
     var listItem = document.createElement("li");
-    listItem.innerHTML = gistLabel + gistUrl + gistDescription;
+    listItem.innerHTML = favoritesButton + gistLabel + gistUrl + gistDescription;
 
     list.appendChild(listItem);
   } 
 
 }
+
+function addToFavorites(button) {
+  var favorites = getFavorites();
+
+  favorites.push(button.value);
+
+  localStorage.setItem("favorite-gists", JSON.stringify(favorites));
+
+  getGists(document.getElementsByTagName("form")[0]);
+}
+
+function getFavorites() {
+  var storedFavorites = localStorage.getItem("favorite-gists");
+  var favorites = new Array();
+  if (storedFavorites != null) {
+    favorites = JSON.parse(storedFavorites);
+  }
+
+  return favorites;
+}
+
+function printFavorites() {
+  var favoritesList = document.getElementById("favorites");
+  var favorites = getFavorites();
+
+  favoritesList.innerHTML = '';
+
+  for (var i = 0; i < favorites.length; ++i) {
+    var favoriteParts = favorites[i].split('~~');
+    var gistUrl = "URL: " +"<a target=\"_blank\" href=\""+ favoriteParts[0] +"\">"+ favoriteParts[0] + "</a>"+"<br>";
+    var gistDescription = "Description: " + favoriteParts[1] + "<br>";
+    var listItem = document.createElement("li");
+    listItem.innerHTML = gistUrl + gistDescription;
+
+    favoritesList.appendChild(listItem);
+
+  }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

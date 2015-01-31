@@ -1,3 +1,7 @@
 Start: Sat, 31 Jan 2015 12:36:00 -0700
 End:  Sat, 31 Jan 2015 14:46:00 -0700
-Tasks: WITH A PRIVATE TUTOR, made the HTML file, buttons, and did the AJAX search/request, and printed results.     
+Tasks: **WITH A PRIVATE TUTOR**, made the HTML file, buttons, and did the AJAX search/request, and printed results.     
+
+Start: Sat, 31 Jan 2015 15:06:00 -0700
+End:  Sat, 31 Jan 2015 16:23:00 -0700
+Tasks: **WITH A PRIVATE TUTOR**, added the favorites feature
