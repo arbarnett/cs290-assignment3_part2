@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Assignment 3, part 2</title>
+  </head>
+  <body>
+    <h1>
+    Assignment 3, part 2
+    </h1>
+  <!--
+Requirements
+
+    Users will be able to list recent Gists from GitHub.
+-->
+    <form onsubmit="getGists(this); return false;">
+      <!-- 
+        Users will be able to pick between 1 and 5 pages of results to display (a page is 30 results by default). You should use an appropriate input to facilitate this.
+              These need not be displayed as separate pages to the user, it only changes the number of total results
+      -->
+
+      <fieldset>
+        <legend>
+          Choose how many pages of results you would like displayed: 
+        </legend>
+
+        <label>
+          <input type="radio" name="pagecount" value="1" checked="checked" /> 1
+        </label>
+
+        <label>
+          <input type="radio" name="pagecount" value="2"/> 2
+        </label>
+
+        <label>
+          <input type="radio" name="pagecount" value="3"/> 3
+        </label>
+
+        <label>
+          <input type="radio" name="pagecount" value="4"/> 4
+        </label>
+
+        <label>
+          <input type="radio" name="pagecount" value="5"/> 5
+        </label>
+
+      </fieldset>
+
+      <!--
+        Users will be able to select, via check boxes, the language of Gists they want to see. At a minimum this list will include Python, JSON, JavaScript and SQL
+            Selecting languages should filter out results when the search button is clicked. That is to say if 30 results would have been returned, <= 30 results will be returned due to filtering. Presumably this will often be many less than 30.
+            Selecting no languages should return all Gist results.
+      -->
+      <br>
+
+      <fieldset>
+        <legend>
+          Select the language of Gists you want to see:
+        </legend>
+
+        <label>
+          <input type="checkbox" name="languages" value="Python" /> Python
+        </label>
+
+        <label>
+          <input type="checkbox" name="languages" value="JSON" /> JSON
+        </label>
+
+        <label>
+          <input type="checkbox" name="languages" value="JavaScript" /> JavaScript
+        </label>
+
+        <label>
+          <input type="checkbox" name="languages" value="SQL" /> SQL
+        </label>
+
+      </fieldset>
+
+       <!--
+        There should be a search button. Clicking on this button should initiate the search. Results should be displayed without requiring a page reload.
+        -->
+        <br>
+
+        <input type="submit" value="Search" />
+
+    </form>
+
+  <!--
+        There should be a search button. Clicking on this button should initiate the search. Results should be displayed without requiring a page reload.
+        After searching users will be able to see, at a minimum the Gist description which will double as a link to the html version of the gist.
+            If you wish to optionally show additional data about the Gists you may do so but it is not required.
+        Gists which have been added to favorites should not show up in the list of Gists returned by the search.
+        Gists listed in the results should have a button to add them to the list of favorites.
+            Clicking this button should visually change the location of the Gist so it shows up in a spatially different location from the list of search results.
+            Clicking the button should save enough data to recreate the description and HTML link on subsequent visits to the page
+        The favorites list should show up upon visiting the page and be marked by a heading. If it is empty the heading should still display.
+            Optionally you can add text indicating that there are no currently saved favorites.
+        Every entry in the favorites should include the description of the Gist and the HTML link to the Gist
+        Every entry in the favorites should have a button to remove it from the list of favorites
+            Clicking that button should make the item immediately disappear and it should not reappear in the favorites list on subsequent reloads.
+
+  -->
+    <h2>
+    Your Filtered Results:
+    </h2>
+
+    <ul id="results">
+
+    </ul>
+
+    <script src="scripts.js"></script>
+  </body>
+</html>
